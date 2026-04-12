@@ -11,6 +11,12 @@ class SourceConfig:
 
 
 @dataclass(frozen=True)
+class TelegramConfig:
+    bot_token: str
+    chat_id: str
+
+
+@dataclass(frozen=True)
 class NormalizedItem:
     item_id: str
     source_id: str
