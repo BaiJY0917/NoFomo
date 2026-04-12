@@ -1,17 +1,15 @@
 from dataclasses import replace
-import re
+
+from bs4 import BeautifulSoup
 
 from nofomo.models import NormalizedItem
 from nofomo.summarizer import build_summaries
 
 
-_TAG_RE = re.compile(r"<[^>]+>")
-
-
 def strip_html(value: str) -> str:
     if not value:
         return ""
-    return " ".join(_TAG_RE.sub(" ", value).split())
+    return " ".join(BeautifulSoup(value, "html.parser").get_text(" ").split())
 
 
 def normalize_entry(source_id: str, platform: str, source_name: str, item_id: str, entry: dict) -> NormalizedItem:

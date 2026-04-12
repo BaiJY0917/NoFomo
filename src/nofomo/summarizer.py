@@ -1,13 +1,10 @@
-import re
-
-
-_TAG_RE = re.compile(r"<[^>]+>")
+from bs4 import BeautifulSoup
 
 
 def _plain_text(raw_text: str) -> str:
     if not raw_text:
         return ""
-    return " ".join(_TAG_RE.sub(" ", raw_text).split())
+    return " ".join(BeautifulSoup(raw_text, "html.parser").get_text(" ").split())
 
 
 def _trim(text: str, limit: int) -> str:
