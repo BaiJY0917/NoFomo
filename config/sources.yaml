@@ -2,5 +2,55 @@ sources:
   - id: v2ex-hot
     platform: v2ex
     name: V2EX Hot
-    rss_url: https://example.com/v2ex.xml
+    rss_url: http://192.168.65.129:1200/v2ex/tab/hot
+    enabled: true
+  - id: fuliba
+    platform: fuliba
+    name: fuliba
+    rss_url: https://fuliba2023.net/feed
+    enabled: true
+  - id: weekly_books
+    platform: telegram
+    name: 小声读书
+    rss_url: http://192.168.65.129:1200/telegram/channel/weekly_books
+    enabled: true
+  - id: caozsay
+    platform: telegram
+    name: caoz的梦呓
+    rss_url: http://192.168.65.129:1200/telegram/channel/caozsay
+    enabled: true
+  - id: shengxj1
+    platform: X
+    name: 花果山大圣
+    rss_url: http://192.168.65.129:1200/twitter/user/shengxj1
+    enabled: false
+  - id: yihong0618
+    platform: X
+    name: yihong0618
+    rss_url: http://192.168.65.129:1200/twitter/user/yihong0618
+    enabled: false
+  - id: yetone
+    platform: X
+    name: yetone
+    rss_url: http://192.168.65.129:1200/twitter/user/yetone
+    enabled: false
+  - id: bobo
+    platform: zsxq
+    name: 是不是很酷
+    rss_url: http://192.168.65.129:1200/zsxq/group/554518521584/by_owner
+    enabled: false
+  - id: xydz
+    platform: weibo
+    name: 小圆豆子
+    rss_url: http://192.168.65.129:1200/weibo/user/1408858273
+    enabled: true
+  - id: stz
+    platform: weibo
+    name: 使徒子
+    rss_url: http://192.168.65.129:1200/weibo/user/1771140437
+    enabled: true
+  - id: sj
+    platform: weibo
+    name: 墅姐
+    rss_url: http://192.168.65.129:1200/weibo/user/7796318711
     enabled: true

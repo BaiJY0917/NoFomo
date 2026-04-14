@@ -1,0 +1,8 @@
+beautifulsoup4<5,>=4.12
+feedparser<7,>=6.0
+PyYAML<7,>=6.0
+requests<3,>=2.32
+
+[dev]
+pytest<9,>=8.0
+pytest-mock<4,>=3.14
