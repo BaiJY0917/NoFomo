@@ -1,0 +1,22 @@
+# Worktrees
+.worktrees/
+.claude/worktrees/
+
+# Claude Code
+.claude/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.class
+.pytest_cache/
+
+# Data files
+data/
+
+# Config (private)
+config/
+
+# Environment
+.env
+*.env.local

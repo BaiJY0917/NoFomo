@@ -1,0 +1,6 @@
+sources:
+  - id: my-feed
+    platform: v2ex
+    name: My Feed
+    rss_url: https://example.com/feed
+    enabled: true

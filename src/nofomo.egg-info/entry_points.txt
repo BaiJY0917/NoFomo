@@ -1,0 +1,2 @@
+[console_scripts]
+nofomo = nofomo.main:main
