@@ -1,1 +1,13 @@
 .worktrees/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.class
+
+# Data files
+data/seen_items.json
+data/telegram_state.json
+data/feedback.jsonl
+data/reports/*.json
+data/logs/*.log

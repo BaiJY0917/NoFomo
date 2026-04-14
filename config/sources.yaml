@@ -1,0 +1,6 @@
+sources:
+  - id: v2ex-hot
+    platform: v2ex
+    name: V2EX Hot
+    rss_url: https://example.com/v2ex.xml
+    enabled: true
