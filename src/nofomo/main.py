@@ -4,6 +4,7 @@ from pathlib import Path
 
 from nofomo.deduper import build_item_id, compute_dedupe_key, filter_new_entries, load_seen_items, save_seen_items
 from nofomo.keyword_matcher import apply_keywords
+from nofomo.logging_utils import configure_logger
 from nofomo.models import FeedbackRecord
 from nofomo.normalizer import attach_summaries, normalize_entry
 from nofomo.report_builder import build_daily_report
@@ -17,6 +18,9 @@ from nofomo.telegram_sender import build_digest_messages, send_messages
 
 def run_digest(root_dir: Path) -> None:
     paths = AppPaths.from_root(root_dir)
+    now = datetime.now(UTC)
+    logger = configure_logger(paths.logs_dir, now.date().isoformat())
+    logger.info("run-digest started")
     sources = load_sources(paths.config_dir / "sources.yaml")
     keywords = load_keywords(paths.config_dir / "keywords.yaml")
     telegram = load_telegram_config(paths.config_dir / "telegram.yaml")
@@ -46,6 +50,7 @@ def run_digest(root_dir: Path) -> None:
             failed_sources.append(source.id)
 
     now = datetime.now(UTC)
+    logger.info("processed %d items from %d sources", len(processed_items), len(sources))
     report = build_daily_report(
         report_date=now.date().isoformat(),
         generated_at=now.isoformat(),
@@ -54,14 +59,19 @@ def run_digest(root_dir: Path) -> None:
         failed_sources=failed_sources,
     )
     save_daily_report(paths.reports_dir, report)
+    logger.info("report saved, sending to telegram")
     send_messages(telegram, build_digest_messages(report))
     save_seen_items(paths.seen_items_file, seen_items | new_seen_keys)
+    logger.info("run-digest complete")
 
 
 def sync_feedback(root_dir: Path) -> None:
     paths = AppPaths.from_root(root_dir)
+    now = datetime.now(UTC)
+    logger = configure_logger(paths.logs_dir, now.date().isoformat())
     telegram = load_telegram_config(paths.config_dir / "telegram.yaml")
     offset = load_offset(paths.telegram_state_file)
+    logger.info("sync-feedback started with offset=%s", offset)
     updates = fetch_updates(telegram.bot_token, offset)
 
     for update in updates:
@@ -88,6 +98,7 @@ def sync_feedback(root_dir: Path) -> None:
         )
         append_feedback_record(paths.feedback_file, record)
         save_offset(paths.telegram_state_file, next_offset(parsed["update_id"]))
+        logger.info("recorded feedback %s for item %s", parsed["feedback_type"], parsed["item_id"])
 
 
 def main() -> None:
