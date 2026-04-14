@@ -1,3 +1,5 @@
+import time
+
 import requests
 
 from nofomo.models import DailyReport, NormalizedItem, TelegramConfig
@@ -32,6 +34,9 @@ def build_digest_messages(report: DailyReport) -> list[str]:
 
 def send_messages(config: TelegramConfig, messages: list[str]) -> None:
     endpoint = f"https://api.telegram.org/bot{config.bot_token}/sendMessage"
-    for message in messages:
+    for i, message in enumerate(messages):
         response = requests.post(endpoint, json={"chat_id": config.chat_id, "text": message}, timeout=30)
         response.raise_for_status()
+        # Telegram API 限制约 30 msg/s，每条消息间隔 1 秒避免触发限流
+        if i < len(messages) - 1:
+            time.sleep(1)
