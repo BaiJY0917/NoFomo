@@ -1,166 +1,140 @@
-# NoFomo - RSS Daily Digest
+# **NoFomo**
 
-A local Python CLI that fetches RSS sources once per day, deduplicates and summarizes new items, highlights keyword matches, pushes a Telegram daily digest, and records Telegram feedback commands.
+> 用更少时间，获取更有价值的信息。
 
-## Features
+用 AI 消解 “AI slop”（低质量、批量生成的信息噪音）。
 
-- **RSS Feed Monitoring**: Fetch and parse multiple RSS sources
-- **Smart Deduplication**: Track seen items across sources with stable IDs
-- **Keyword Highlighting**: Mark items matching your keyword list
-- **Telegram Integration**: Daily digest delivery and feedback collection
-- **File-Based Storage**: No database required, all data stored locally in JSON/YAML
+---
 
-## Installation
+## **✨ Features**
 
-```bash
+- 📰 **多源聚合**：基于 RSSHub 汇总来自多个平台的内容
+- 🤖 **AI 自动摘要**：快速判断内容是否值得阅读
+- 🎯 **偏好学习**：通过 like / unlike 持续优化推荐
+- ⚡ **低摩擦使用**：基于 Telegram Bot，无需额外客户端
+- 🧘 **抗 FOMO 设计**：减少信息焦虑，同时不错过重要内容
+
+---
+
+## **🚀 Quick Start**
+
+### **1. 准备环境**
+
+- Python 3.12+
+- RSSHub 实例
+- Telegram Bot Token
+
+---
+
+### **2. 配置 NoFomo**
+
+```
 # Clone the repository
 git clone <repository-url>
 cd NoFomo
-
+​
 # Install dependencies
 pip install -e .
-```
-
-## Configuration
-
-### 1. Configure RSS Sources
-
-Edit `config/sources.yaml`:
-
-```yaml
-sources:
-  - id: v2ex-hot
-    platform: v2ex
-    name: V2EX Hot
-    rss_url: https://www.v2ex.com/index.xml
-    enabled: true
-
-  - id: indie-hackers
-    platform: indie-hackers
-    name: Indie Hackers
-    rss_url: https://indiehackers.com/feed
-    enabled: true
-```
-
-### 2. Configure Keywords
-
-Edit `config/keywords.yaml`:
-
-```yaml
-keywords:
-  - AI
-  - agent
-  - productivity
-  - automation
-```
-
-### 3. Configure Telegram
-
-Edit `config/telegram.yaml`:
-
-```yaml
-bot_token: YOUR_BOT_TOKEN
-chat_id: YOUR_CHAT_ID
-```
-
+​
+# Configure RSS Sources
+Edit `config/sources.yaml`
+​
+# Configure Keywords
+Edit `config/keywords.yaml`
+​
+# Configure Telegram
+Edit `config/telegram.yaml`
 To get your bot token, talk to [@BotFather](https://t.me/botfather) on Telegram.
+```
 
-## Usage
 
-### Run Daily Digest
+---
 
-Generate and send today's digest:
 
-```bash
+
+### **3. 使用**
+
+```
+# 生成每日摘要
 nofomo run-digest
-```
 
-Or with Python:
-
-```bash
-python -m nofomo.main run-digest
-```
-
-This will:
-1. Fetch all enabled RSS sources
-2. Filter out already-seen items
-3. Normalize and summarize content
-4. Match against keywords and mark highlights
-5. Build and save daily report
-6. Send digest to Telegram
-7. Update seen items list
-
-### Sync Feedback
-
-Collect feedback from Telegram:
-
-```bash
+# 同步阅读反馈
 nofomo sync-feedback
 ```
+---
 
-This will:
-1. Fetch recent updates from Telegram Bot API
-2. Parse `/like` and `/dislike` commands
-3. Record feedback to local archive
-4. Update offset to avoid reprocessing
+### **4. 使用流程**
 
-### Telegram Commands
+1. 添加订阅源（RSS）
+2. 系统抓取内容
+3. AI 生成摘要
+4. 在 Telegram 中查看内容
+5. 通过 👍 / 👎 训练你的偏好
 
-When reading the digest, reply with:
+---
 
-- `/like <item_id>` - Mark an item as liked
-- `/dislike <item_id>` - Mark an item as disliked
+## **🧠 Why NoFomo?**
 
-Then run `nofomo sync-feedback` to record your feedback.
+现代互联网内容分发高度碎片化，典型用户的信息来源通常包括：
 
-## Development
+YouTube / Weibo / X / V2EX / Reddit / Bilibili / Telegram / 公众号 / 博客 / 知识星球 / 新闻资讯
 
-### Run Tests
+这些信息源通常只能在各自平台内阅读，且更新与排序方式并不总是按时间线呈现。通过自建 RSSHub 并配合 RSS 阅读器，确实可以解决约 80% 的聚合问题；但对“个人化阅读效率”来说仍有明显缺口。
 
-```bash
-pytest tests/ -v
-```
+### **主要问题**
 
-### Project Structure
+1. **内容膨胀与质量失控**：自媒体依赖高频更新获取流量与收益，低营养内容本就普遍；在 AI 普及后，内容生产速度更快，但质量更难保证，甚至出现“日更七八条碎碎念”的情况。
+2. **收藏/待读永远看不完**：当你同时关注多个方向的创作者（娱乐、科技、生活、健身等），即使他们都在持续输出高价值内容，阅读任务也会被指数式堆高。例如关注 10 位创作者、每人每天发布 2 条内容，就意味着每天需要处理约 20 条信息。
+3. **过滤成本过高**：大部分内容并无阅读价值（生活碎片、梗图、圈内互转等）。人工浏览筛选浪费时间；关键词过滤又需要不断维护与扩展，且容易误伤。
+4. **取关与 FOMO 的矛盾**：理性上取关多数账号并不会影响生活，但完全忽略网络信息又容易触发 FOMO（错失恐惧）情绪。
 
-```
-NoFomo/
-├── config/           # YAML configuration files
-├── data/            # Local data storage
-│   ├── reports/     # Daily report archives
-│   └── logs/        # Application logs
-├── src/nofomo/      # Main source code
-│   ├── main.py      # CLI entry point
-│   ├── models.py    # Data structures
-│   ├── rss_fetcher.py
-│   ├── deduper.py
-│   ├── normalizer.py
-│   ├── summarizer.py
-│   ├── keyword_matcher.py
-│   ├── report_builder.py
-│   ├── telegram_sender.py
-│   └── telegram_feedback.py
-└── tests/           # Unit tests
-```
+---
 
-## Architecture
+## **🎯 Design Goals**
 
-NoFomo uses a file-backed batch pipeline architecture:
+- **摘要优先**：先用 AI 总结，再决定是否阅读原文
+- **偏好驱动**：系统持续学习你的兴趣，而不是依赖规则过滤
+- **降低决策成本**：让“看不看”变得几乎无成本
 
-- **No daemon processes** - Runs on-demand via CLI
-- **No database** - All state stored in JSON/YAML files
-- **No webhooks** - Telegram feedback pulled on-demand
-- **Fail-safe** - Errors logged, failed sources reported, partial progress preserved
+---
 
-## Tech Stack
+## **🏗️ Architecture**
 
-- Python 3.12+
-- feedparser - RSS parsing
-- PyYAML - Configuration
-- requests - HTTP requests
-- beautifulsoup4 - HTML parsing
-- pytest - Testing
+### **Data Layer**
 
-## License
+- RSSHub：聚合多平台内容
+- cookieCloud：维持登录态（部分平台）
 
-MIT
+### **Backend**
+
+- 订阅源管理
+- 定时抓取
+- 已读 / 未读状态管理
+- AI 摘要生成
+- 用户偏好建模
+
+### **Frontend**
+
+- Telegram Bot（轻量交互）
+
+---
+
+## **📌 Todo**
+
+- [ ]  Telegram Bot支持反馈按钮
+- [ ] 摘要按照更新内容分类汇总
+- [ ]  增加推荐算法优化（embedding / ranking）
+- [ ]  支持后台运行
+
+
+---
+
+## **⭐ Philosophy**
+
+> NoFomo 的目标不是“阅读更多”，而是“用更少时间获取更有价值的信息”。
+
+---
+
+## **📄 License**
+
+MIT License
